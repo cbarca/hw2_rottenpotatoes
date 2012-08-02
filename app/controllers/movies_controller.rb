@@ -8,11 +8,18 @@ class MoviesController < ApplicationController
 
   def index
   @order = params[:order]
-  @movies = Movie.all
-  if @order == "title"
-    @movies.sort_by! { |a| a.title }
-  elsif @order == "release_date"
-    @movies.sort_by! { |a| a.release_date }
+  @all_ratings = Movie.all_ratings
+  @movies = []
+  
+  if params[:ratings] != nil
+    @sel_ratings = params[:ratings].keys
+    @sel_ratings_hash = Hash[@sel_ratings.map { |v| [v, 1] }]
+    @movies = Movie.where(:rating => @sel_ratings)
+    if @order == "title"
+      @movies.sort_by! { |a| a.title }
+    elsif @order == "release_date"
+      @movies.sort_by! { |a| a.release_date }
+    end
   end
   end
 
