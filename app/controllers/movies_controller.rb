@@ -8,7 +8,7 @@ class MoviesController < ApplicationController
 
   def index
   @movies = []
-  @sel_order = params[:order]
+  @sel_order = params[:order] || session[:order]
   @sel_ratings_hash = params[:ratings]
   @all_ratings = Movie.all_ratings
 
@@ -20,9 +20,6 @@ class MoviesController < ApplicationController
     @sel_ratings_keys = @sel_ratings_hash.keys
     #restrict database query to selected filters
     @movies = Movie.where(:rating => @sel_ratings_keys)
-    if (@sel_order == nil) 
-      @sel_order = session[:order]
-    end
     if @sel_order == "title"
       session[:order] = @sel_order
       @movies.sort_by! { |a| a.title }
